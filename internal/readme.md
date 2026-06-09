@@ -90,7 +90,7 @@ internal/
 | handler.go      | HTTP Request Handle     |
 | routes.go       | Route Registration      |
 
-### Go Developer হিসেবে আমি সাধারণত এই Structure সাজেস্ট করি
+### Go Developer হিসেবে আমি সাধারণত এই Structure সাজেস্ট করি (I do this)
 
 ```text
 internal/

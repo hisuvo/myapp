@@ -61,6 +61,47 @@ func (h *handler) CreateUser(c *echo.Context) error {
 
 }
 
+func (h *handler) LoginUser(c *echo.Context) error {
+	var req dto.LoginRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, httpresponse.NewWithDetails(
+			http.StatusBadRequest,
+			"Invalide request payload",
+			err.Error(),
+		))
+	}
+
+	if err := c.Validate(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, httpresponse.NewWithDetails(
+			http.StatusBadRequest,
+			"Invalide request payload",
+			err.Error(),
+		))
+	}
+		
+	response, err := h.service.LoginUser(req)
+
+	if err != nil {
+
+		if errors.Is(err, ErrAlreadyExist) {
+		return  c.JSON(http.StatusUnauthorized, httpresponse.NewWithDetails(
+			http.StatusUnauthorized,
+			"Invalide email and password",
+			err.Error(),
+		))
+	}
+
+		return  c.JSON(http.StatusInternalServerError, httpresponse.NewWithDetails(
+		http.StatusInternalServerError,
+		"Failed to loign user",
+		err.Error(),
+	))
+	}
+	
+	return c.JSON(http.StatusCreated, response)
+}
+
 /*
 //* Important Note:
 

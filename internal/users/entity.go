@@ -22,3 +22,11 @@ func (u *User) hashPassword(password string) error{
 	u.Password = string(bytes)
 	return nil
 }
+
+func (u *User) CheckPassword(password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password),[]byte(password))
+	if err != nil {
+		return err
+	}
+	return  nil
+}
