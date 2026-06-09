@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	httpresponse "myapp/internal/httpresponse"
 	"myapp/internal/users/dto"
 	"net/http"
@@ -30,7 +31,7 @@ func (h *handler) CreateUser(c *echo.Context) error {
 		))
 	}
 
-	if err := c.Validate(req); err != nil {
+	if err := c.Validate(&req); err != nil {
 		return  c.JSON(http.StatusBadRequest, httpresponse.NewWithDetails(
 			http.StatusBadRequest,
 			"Validation failed",
@@ -41,14 +42,22 @@ func (h *handler) CreateUser(c *echo.Context) error {
   response, err := h.service.CreateUser(req)
 
   if err != nil {
+	if errors.Is(err, ErrAlreadyExist) {
+		return  c.JSON(http.StatusConflict, httpresponse.NewWithDetails(
+			http.StatusConflict,
+			"User already exists!",
+			err.Error(),
+		))
+	}
+
 	return  c.JSON(http.StatusBadRequest, httpresponse.NewWithDetails(
 		http.StatusBadRequest,
 		"Failed to create user",
 		err.Error(),
-		))
+	))
   }
 
-  return c.JSON(http.StatusOK, response)
+  return c.JSON(http.StatusCreated, response)
 
 }
 
