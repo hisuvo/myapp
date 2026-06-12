@@ -15,6 +15,7 @@ import (
 
 var ErrAlreadyExist = errors.New("user email already exists")
 
+// Repository Pattern → Database operations abstract করার জন্য।
 type Repository interface{
 	CreateUser(u *User) error
 	GetUserByEmail(email string) (*User, error)
@@ -25,11 +26,15 @@ type repository struct {
 	db *gorm.DB
 }
 
+// Dependency Injection Pattern → *gorm.DB constructor-এর মাধ্যমে inject করার জন্য।
 func NewRepository(db *gorm.DB) Repository {
 	return &repository{
 		db: db,
 	}
 }
+// Note:
+// Constructor/Factory Pattern → NewRepository() object create করার জন্য। 
+// func NewRepository(db *gorm.DB) Repository
 
 func (r *repository) CreateUser(user *User) error {
 	result := r.db.Create(user)

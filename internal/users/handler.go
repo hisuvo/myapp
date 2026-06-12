@@ -1,3 +1,9 @@
+/*
+* Handler only handle request and reponse
+* payload have exist
+* validation is accour currectly
+ */
+
 package users
 
 import (

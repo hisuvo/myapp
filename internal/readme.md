@@ -90,6 +90,14 @@ internal/
 | handler.go      | HTTP Request Handle     |
 | routes.go       | Route Registration      |
 
+## Request path:
+
+    routes → handler → request DTO → service → entity → repository → DB
+
+## Response path:
+
+    DB → repository → service → response DTO → handler → client
+
 ### Go Developer হিসেবে আমি সাধারণত এই Structure সাজেস্ট করি (I do this)
 
 ```text
@@ -323,3 +331,150 @@ Rule:
 ✅ Reusable library code → `pkg/` (optional)
 
 বেশিরভাগ modern Go project (যেমন Uber, Docker, Kubernetes ecosystem-এর project) `internal/` ব্যবহার করে application-এর private code isolate করার জন্য।
+
+---
+
+**Dependency Injection (DI)** হলো এমন একটি pattern যেখানে কোনো object তার প্রয়োজনীয় dependency নিজে তৈরি না করে, বাইরে থেকে receive করে।
+
+### DI ছাড়া
+
+```go
+type Service struct {
+	repo *Repository
+}
+
+func NewService() *Service {
+	return &Service{
+		repo: &Repository{}, // নিজেই তৈরি করছে
+	}
+}
+```
+
+সমস্যা:
+
+- Service এবং Repository tightly coupled।
+- Testing কঠিন।
+- Repository পরিবর্তন করলে Service-ও পরিবর্তন করতে হতে পারে।
+
+---
+
+### DI ব্যবহার করে
+
+```go
+type Service struct {
+	repo Repository
+}
+
+func NewService(repo Repository) *Service {
+	return &Service{
+		repo: repo,
+	}
+}
+```
+
+Usage:
+
+```go
+repo := NewRepository(db)
+service := NewService(repo)
+```
+
+এখানে `Service` নিজে `Repository` তৈরি করছে না। বাইরে থেকে inject করা হচ্ছে।
+
+---
+
+## তোমার Repository উদাহরণ
+
+```go
+type repository struct {
+	db *gorm.DB
+}
+
+func NewRepository(db *gorm.DB) Repository {
+	return &repository{
+		db: db,
+	}
+}
+```
+
+এখানে:
+
+```go
+db := ConnectDB()
+
+repo := NewRepository(db)
+```
+
+`db` dependency-টি `repository`-এর মধ্যে inject করা হচ্ছে।
+
+---
+
+## পুরো Flow
+
+```go
+db := ConnectDB()
+
+repo := NewRepository(db)
+
+service := NewService(repo)
+
+handler := NewHandler(service)
+```
+
+```text
+gorm.DB
+   ↓ inject
+Repository
+   ↓ inject
+Service
+   ↓ inject
+Handler
+```
+
+এটাকেই Dependency Injection Chain বলে।
+
+---
+
+## Backend-এ সবচেয়ে common DI
+
+```text
+Database
+   ↓
+Repository
+   ↓
+Service
+   ↓
+Handler
+   ↓
+Routes
+```
+
+প্রতিটি layer নিচের layer-কে constructor-এর মাধ্যমে receive করে।
+
+---
+
+### সুবিধা
+
+✅ Loose Coupling
+✅ Easy Testing (Mock Repository ব্যবহার করা যায়)
+✅ Code Maintainable
+✅ Production-level Architecture
+
+তোমার বর্তমান structure:
+
+```text
+user/
+ ├─ repository.go
+ ├─ service.go
+ ├─ handler.go
+```
+
+এখানে:
+
+```go
+repo := NewRepository(db)
+service := NewService(repo)
+handler := NewHandler(service)
+```
+
+এই constructor-based approach-টাই Go-তে সবচেয়ে জনপ্রিয় **Dependency Injection Pattern**।
