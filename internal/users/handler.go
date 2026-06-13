@@ -108,6 +108,34 @@ func (h *handler) LoginUser(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
+
+func (h *handler) GetMe(c *echo.Context) error {
+	id, ok := c.Get("id").(uint)
+
+	if !ok {
+		return c.JSON(
+			http.StatusNotFound,
+			httpresponse.NewWithDetails(
+				http.StatusNotFound,
+				"Cannot get user information",
+				"missing user id in context",
+			),
+		)
+	}
+
+	name, _ := c.Get("name").(string)
+	email, _ := c.Get("email").(string)
+
+	return c.JSON(
+		http.StatusOK,
+		dto.Response{
+			Id:    id,
+			Name:  name,
+			Email: email,
+		},
+	)
+}
+
 /*
 //* Important Note:
 

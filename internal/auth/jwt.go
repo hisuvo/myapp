@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,16 +13,16 @@ const (
 )
 
 type JWTClaims struct {
-	UserId uint `json:"user_id"`
-	Name string `json:""`
-	Email string `json:""`
+	Id uint `json:"id"`
+	Name string `json:"name"`
+	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
 // If any function want to behave of JWTService then him obey this interafce
 type JWTService interface {
 	GenerateToken(userId uint, name string, email string)(string, error)
-	// VerifyToken(tokenstr string)(*JWTClaims, error)
+	VerifyToken(tokenstr string)(*JWTClaims, error)
 }
 
 type JWT struct {
@@ -48,9 +49,9 @@ func NewJWT(secret string, duration time.Duration) JWTService{
 	}
 }
 
-func (j *JWT) GenerateToken(userId uint, name string, email string) (string, error){
+func (j *JWT) GenerateToken(id uint, name string, email string) (string, error){
 	claims := JWTClaims{
-		UserId: userId,
+		Id: id,
 		Name: name,
 		Email: email,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -73,4 +74,22 @@ func (j *JWT) GenerateToken(userId uint, name string, email string) (string, err
 	return  tokeStr, nil
 }
 
-// func (j *JWT) VarifyToken(tokenstr string) {}
+func (j *JWT) VerifyToken(tokenstr string)(*JWTClaims, error) {
+	
+	token, err := jwt.ParseWithClaims(tokenstr,&JWTClaims{},func(t *jwt.Token) (any, error) {
+		if _, Ok := t.Method.(*jwt.SigningMethodHMAC); !Ok {
+			return nil, fmt.Errorf("Unexpected sign method %v",t.Header["alg"])
+		}
+		return []byte(j.SecretKey), nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("Unexpected sign method %v", err)
+	}
+
+	if claims, Ok := token.Claims.(*JWTClaims); Ok && token.Valid {
+		return claims, nil
+	}
+
+	return  nil, fmt.Errorf("Invalid token")
+}
