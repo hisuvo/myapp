@@ -33,7 +33,7 @@ func AuthMiddleware(JWTService auth.JWTService) echo.MiddlewareFunc{
 				return c.JSON(http.StatusUnauthorized,"authorization header required")
 			}
 
-			c.Set("id", claims.ID)
+			c.Set("id", claims.Id)
 			c.Set("name", claims.Name)
 			c.Set("email", claims.Email)
 
