@@ -23,6 +23,9 @@ func NewService(repository Repository) Service {
 }
 
 func (s *service) Create(req *dto.CreateEventRequest)(*dto.EventResponse, error){
+
+	println("service request:", req)
+
 	event := &Event{
 		Title:              req.Title,
 		Description:        req.Description,
@@ -34,6 +37,7 @@ func (s *service) Create(req *dto.CreateEventRequest)(*dto.EventResponse, error)
 	}
 
 	if err := s.repository.Create(event); err != nil {
+		println("serveice error")
 		return nil, err
 	}
 

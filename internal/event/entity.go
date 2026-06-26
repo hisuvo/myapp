@@ -20,8 +20,8 @@ type Event struct {
 	AvailableTickets int `gorm:"not null" json:"available_tickets"`
 
 	Price        float64 `gorm:"type:decimal(10,2);default:0" json:"price"`
-	ImageURL     string `gorm:"type:varchar(500)" json:"image_url"`
-	Category     string `gorm:"type:varchar(100)" json:"category"`
-	Status       string `gorm:"type:varchar(20);default:'upcoming'" json:"status"` // upcoming, ongoing, completed, cancelled
-	OrganizerID  uint `gorm:"index" json:"organizer_id"`
+	// ImageURL     string `gorm:"type:varchar(500)" json:"image_url"`
+	// Category     string `gorm:"type:varchar(100)" json:"category"`
+	// Status       string `gorm:"type:varchar(20);default:'upcoming'" json:"status"` // upcoming, ongoing, completed, cancelled
+	// OrganizerID  uint `gorm:"index" json:"organizer_id"`
 }

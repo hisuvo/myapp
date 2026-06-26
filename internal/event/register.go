@@ -2,13 +2,18 @@ package event
 
 import (
 	"github.com/labstack/echo/v5"
+	"gorm.io/gorm"
 )
 
-func RegisterRoutes(g *echo.Group, handler *Handler) {
-	events := g.Group("/events")
+func RegisterRoutes(e *echo.Echo, db *gorm.DB) {
+	enventRegister := NewRepository(db)
+	eventService := NewService(enventRegister)
+	eventHandler := NewHandler(eventService)
 
-	events.POST("", handler.Create)
-	events.GET("", handler.GetAll)
-	events.GET("/:id", handler.GetById)
-	events.PUT("/:id", handler.Update)
+	events := e.Group("/api/v1")
+
+	events.POST("/events", eventHandler.Create)
+	events.GET("/events", eventHandler.GetAll)
+	events.GET("/events/:id", eventHandler.GetById)
+	events.PUT("/events/:id", eventHandler.Update)
 }

@@ -2,6 +2,7 @@ package server
 
 import (
 	"myapp/internal/config"
+	"myapp/internal/event"
 	"myapp/internal/users"
 	"net/http"
 
@@ -24,9 +25,6 @@ func (cv *CustomValidator) Validate(i any) error {
 }
 
 func Start(db *gorm.DB, cfg *config.Config) {
-
-	Port := cfg.Port
-
 	e := echo.New()
 	e.Use(middleware.RequestLogger())
 
@@ -40,7 +38,10 @@ func Start(db *gorm.DB, cfg *config.Config) {
 	//? POST: Create user api
 	users.RegisterRoute(e, db)
 
-	if err := e.Start(":"+Port); err != nil{
+	event.RegisterRoutes(e, db)
+
+	port := cfg.Port
+	if err := e.Start(":"+port); err != nil{
 		e.Logger.Error("failed to server start","error", err)
 	}
 }

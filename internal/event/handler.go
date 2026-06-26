@@ -109,11 +109,11 @@ func (h *Handler) Update(c *echo.Context) error{
 
 	event, err := h.service.Update(uint(id), &req)
 
-	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusInternalServerError,map[string]string{
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"message": err.Error(),
 		})
 	}
-
+	
 	return c.JSON(http.StatusOK, event)
 }
