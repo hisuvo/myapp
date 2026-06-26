@@ -78,6 +78,38 @@ internal/
     └── routes.go
 ```
 
+### OR
+
+```text
+internal/
+├── user/
+│   ├── dto/
+│   │   ├── request.go
+│   │   └── response.go
+│   ├── validator.go
+│   ├── entity.go
+│   ├── repository.go
+│   ├── service.go
+│   ├── handler.go
+│   └── routes.go
+│
+├── event/
+│   ├── dto/
+│   │   ├── request.go
+│   │   └── response.go
+│   ├── validator.go
+│   ├── entity.go
+│   ├── repository.go
+│   ├── service.go
+│   ├── handler.go
+│   └── routes.go
+│
+└── shared/
+    └── validator/
+        ├── validator.go
+        └── custom_validator.go
+```
+
 **প্রতিটি ফাইলের কাজ:**
 
 | File            | কাজ                     |

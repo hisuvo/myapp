@@ -15,7 +15,8 @@ type Config struct {
 func LoadEnv() *Config {
 
 /*
-* err := godotenv.Load() .env ফাইল থেকে সব environment variables লোড করে OS environment এ সেট করে দেয়।
+* err := godotenv.Load() .env ফাইল থেকে সব environment variables লোড করে --
+* OS environment এ সেট করে দেয়।
 * এরপর তুমি os.Getenv("KEY") দিয়ে সেগুলো ব্যবহার করতে পারো।
 * যদি .env না পায় বা error হয়, তাহলে err এ error থাকে।
 */

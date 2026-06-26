@@ -9,7 +9,7 @@ import (
 
 var ErrInvalideCredentials = errors.New("User email not found")
 
-// IT is a set of rule
+// It is a set of rule
 // Service level DTO use করবে (best practice)
 type Service interface {
 	CreateUser(req dto.CreateRequest) (*dto.Response, error)

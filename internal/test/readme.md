@@ -1,11 +1,3 @@
-তোমার code কাজ করবে, কিন্তু production level-এ কিছু improvement করা যায়:
-
-1. Interface method export করা (`Sound()`)
-2. Meaningful method body দেওয়া
-3. Constructor validation যোগ করা
-4. Field name `Bride` → `Breed` (Dog breed)
-5. Proper comments যোগ করা
-
 ### Production-style Version
 
 ```go

@@ -41,3 +41,26 @@ func NewWithDetails(code int, message string, details string) *Error {
 // 	"Validation Error",
 // 	"Email already exists",
 // )
+
+type APIResponse struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
+// ? Use case APIResponse
+// return c.JSON(http.StatusOK, response.APIResponse{
+// 	Success: true,
+// 	Message: "Event fetched successfully",
+// 	Data:    event,
+// })
+
+//? Result:
+// {
+//   "success": true,
+//   "message": "Event created successfully",
+//   "data": {
+//     "id": 1,
+//     "title": "Go Conference"
+//   }
+// }

@@ -33,12 +33,12 @@ type JWT struct {
 
 func NewJWT(secret string, duration time.Duration) JWTService{
 
-	// NewJWT inove time if not parse secret key then this statement work
+	// NewJWT invoce time if not parse secret key then this statement work
 	if secret == "" {
 		secret = jwtSecrectKey
 	}
 
-	// NewJWT inove time if not parse token duration time then this statement work
+	// NewJWT invoce time if not parse token duration time then this statement work
 	if duration == 0 {
 		duration = defaultTokenDuration
 	}
